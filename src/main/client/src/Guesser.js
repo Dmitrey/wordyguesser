@@ -85,9 +85,6 @@ export class Guesser extends Component {
                     <div>
                         <button onClick={this.sendData}>SEND</button>
                     </div>
-                    <div>
-                        <button onClick={this.bam}>TEST BACKEND CONNECTION</button>
-                    </div>
                 </div>
                 <ul>
                     {this.state.suggestions.map(item => {return <li>{item}</li>;})}
