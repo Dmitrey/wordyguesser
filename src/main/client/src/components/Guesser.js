@@ -1,5 +1,6 @@
 import {Component} from "react";
 import axios from "axios";
+import {LetterInput} from "./LetterInput";
 
 export class Guesser extends Component {
     constructor(props) {
@@ -61,11 +62,6 @@ export class Guesser extends Component {
         axios.get("http://localhost:8080/bam")
             .then(response => {
                 console.log(response);
-                // if (response.status === 200) {
-                //     this.setState({suggestions:suggestions.unshift("ВОРКАЕТ")});
-                // }else {
-                //     this.setState({suggestions: suggestions.unshift("НЕ ВОРКАЕТ")});
-                // }
             });
     }
 
@@ -73,6 +69,7 @@ export class Guesser extends Component {
         return (
             <div>
                 <div>
+                    <LetterInput callback = {this.handleMask}/>
                     <div>
                         <label>MASK</label>
                         <input value={this.state.mask} onChange={this.handleMask}/></div>
@@ -87,7 +84,9 @@ export class Guesser extends Component {
                     </div>
                 </div>
                 <ul>
-                    {this.state.suggestions.map(item => {return <li>{item}</li>;})}
+                    {this.state.suggestions.map(item => {
+                        return <li>{item}</li>;
+                    })}
                 </ul>
             </div>
 
