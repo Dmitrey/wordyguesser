@@ -17,13 +17,12 @@ export class Guesser extends Component {
         this.handleMask = this.handleMask.bind(this);
         this.handleCon = this.handleCon.bind(this);
         this.handleNocon = this.handleNocon.bind(this);
-        this.bam = this.bam.bind(this);
-
+        this.createMask = this.createMask.bind(this);
     }
 
     sendData() {
         console.log(this.state.inputData);
-        axios.post("http://localhost:8080/hey", this.state.inputData)
+        axios.post("http://10.247.13.117:8080/hey", this.state.inputData)
             .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
     }
 
@@ -58,11 +57,8 @@ export class Guesser extends Component {
         });
     }
 
-    bam() {
-        axios.get("http://localhost:8080/bam")
-            .then(response => {
-                console.log(response);
-            });
+    createMask(){
+
     }
 
     render() {

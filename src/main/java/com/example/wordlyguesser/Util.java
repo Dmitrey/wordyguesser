@@ -11,12 +11,20 @@ import java.util.stream.Collectors;
 
 @Component
 public class Util {
+    String maxWord = "";
 
     //маску писать через точки: apple - a..l.
     public List<String> find(String mask, String contains, String noContain) throws IOException {
         String m = "^" + mask;
         String file = "src/main/resources/words.txt";
         String content = new String(Files.readAllBytes(Paths.get(file)));
+
+        Arrays.stream(content.split("\n"))
+                .map(String::toLowerCase)
+                .map(s-> s.length()>maxWord.length()?maxWord = s:null)
+                .collect(Collectors.toList());
+        System.out.println(maxWord);
+
         return Arrays.stream(content.split("\n"))
                 .map(String::toLowerCase)
                 .filter(s -> s.matches(m) && eachContains(contains, s) && containsNo(noContain, s))
