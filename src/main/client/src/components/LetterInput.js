@@ -4,12 +4,10 @@ export class LetterInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            length: 4,
-            letters: []
+            length: 4
         }
         this.setLength = this.setLength.bind(this);
         this.createLetterInputs = this.createLetterInputs.bind(this);
-        this.updateArr = this.updateArr.bind(this);
     }
 
     setLength(event) {
@@ -19,13 +17,12 @@ export class LetterInput extends Component {
     createLetterInputs() {
         let rows = [];
         for (let i = 0; i < this.state.length; i++) {
-            rows.push(<input key={i} className={"letterInput"} onChange={this.updateArr}/>); //добавлять буквы в массив
+            rows.push(<input key={i} className={"letterInput"}
+                             onChange={(event) => {
+                                 this.props.callback(i, event.target.value, this.state.length)
+                             }}/>); //добавлять буквы в массив
         }
         return (<div>{rows}</div>);
-    }
-
-    updateArr(){
-
     }
 
     render() {
@@ -33,7 +30,10 @@ export class LetterInput extends Component {
             <div>
                 <label>LENGTH</label>
                 <input value={this.state.length} onChange={this.setLength}/>
-                {this.createLetterInputs()}
+                <div>
+                    <label>MASK</label>
+                    {this.createLetterInputs()}
+                </div>
             </div>
         );
     }

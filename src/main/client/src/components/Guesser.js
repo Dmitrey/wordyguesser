@@ -1,6 +1,7 @@
 import {Component} from "react";
 import axios from "axios";
 import {LetterInput} from "./LetterInput";
+import update from 'react-addons-update';
 
 export class Guesser extends Component {
     constructor(props) {
@@ -11,30 +12,20 @@ export class Guesser extends Component {
                 con: "",
                 nocon: ""
             },
-            suggestions: ["nothing"]
+            suggestions: ["nothing"],
+            letters: []
         }
         this.sendData = this.sendData.bind(this);
-        this.handleMask = this.handleMask.bind(this);
         this.handleCon = this.handleCon.bind(this);
         this.handleNocon = this.handleNocon.bind(this);
-        this.createMask = this.createMask.bind(this);
+        this.getLetter = this.getLetter.bind(this);
     }
 
     sendData() {
+        this.createMask();
         console.log(this.state.inputData);
         axios.post("http://10.247.13.117:8080/hey", this.state.inputData)
             .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
-    }
-
-    handleMask(event) {
-        this.setState({
-            inputData:
-                {
-                    mask: event.target.value,
-                    con: this.state.inputData.con,
-                    nocon: this.state.inputData.nocon
-                }
-        });
     }
 
     handleCon(event) {
@@ -57,24 +48,59 @@ export class Guesser extends Component {
         });
     }
 
-    createMask(){
+    // getLetter(id, value) {
+    //     let newArray = this.state.letters.slice(0, this.state.letters.length);
+    //     newArray[id] = value;
+    //     console.log(newArray);
+    //     this.setState(prevState => ({
+    //         letters: newArray
+    //     })) //todo другие объекты нужно добавлять?
+    // }
 
+    getLetter(id, value, length) {
+        //this.state.letters.length = length;// так работает
+        let newArr = [...this.state.letters];
+        newArr.length = length;
+        this.setState({letters:newArr});
+        this.setState(update(this.state, {
+            letters: {
+                [id]: {$set: value}
+            }
+        }));
+        console.log(this.state.letters);
+    }
+
+    createMask() {
+        let mask = "";
+        for (let l of this.state.letters) {
+            if (l === "" || l === undefined || l === null) {
+                mask += ".";
+            } else {
+                mask += l;
+            }
+        }
+        this.setState({
+            inputData: {
+                mask: mask,
+                con: this.state.inputData.con,
+                nocon: this.state.inputData.nocon
+            }
+        });
     }
 
     render() {
         return (
             <div>
                 <div>
-                    <LetterInput callback = {this.handleMask}/>
-                    <div>
-                        <label>MASK</label>
-                        <input value={this.state.mask} onChange={this.handleMask}/></div>
+                    <LetterInput callback={this.getLetter}/>
                     <div>
                         <label>WORD CONTAINS</label>
-                        <input value={this.state.con} onChange={this.handleCon}/></div>
+                        <input value={this.state.con} onChange={this.handleCon}/>
+                    </div>
                     <div>
                         <label>WORD DOESN'T CONTAIN</label>
-                        <input value={this.state.nocon} onChange={this.handleNocon}/></div>
+                        <input value={this.state.nocon} onChange={this.handleNocon}/>
+                    </div>
                     <div>
                         <button onClick={this.sendData}>SEND</button>
                     </div>
@@ -85,7 +111,6 @@ export class Guesser extends Component {
                     })}
                 </ul>
             </div>
-
         );
     }
 }

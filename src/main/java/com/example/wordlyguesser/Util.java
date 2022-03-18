@@ -19,11 +19,11 @@ public class Util {
         String file = "src/main/resources/words.txt";
         String content = new String(Files.readAllBytes(Paths.get(file)));
 
-        Arrays.stream(content.split("\n"))
-                .map(String::toLowerCase)
-                .map(s-> s.length()>maxWord.length()?maxWord = s:null)
-                .collect(Collectors.toList());
-        System.out.println(maxWord);
+//        Arrays.stream(content.split("\n"))
+//                .map(String::toLowerCase)
+//                .map(s-> s.length()>maxWord.length()?maxWord = s:null)
+//                .collect(Collectors.toList());
+//        System.out.println(maxWord);
 
         return Arrays.stream(content.split("\n"))
                 .map(String::toLowerCase)
