@@ -57,11 +57,8 @@ export class Guesser extends Component {
     //     })) //todo другие объекты нужно добавлять?
     // }
 
-    getLetter(id, value, length) {
+    getLetter(id, value) {
         //this.state.letters.length = length;// так работает
-        let newArr = [...this.state.letters];
-        newArr.length = length;
-        this.setState({letters:newArr});
         this.setState(update(this.state, {
             letters: {
                 [id]: {$set: value}
@@ -71,6 +68,13 @@ export class Guesser extends Component {
     }
 
     createMask() {
+        let newArr = [];
+        newArr.length = JSON.parse(localStorage.getItem("length")).length;
+        for (let i = 0; i < JSON.parse(localStorage.getItem("length")).length; i++){
+            newArr[i] = this.state.letters[i];
+        }
+        this.setState({letters:newArr});
+
         let mask = "";
         for (let l of this.state.letters) {
             if (l === "" || l === undefined || l === null) {
