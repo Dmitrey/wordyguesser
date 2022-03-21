@@ -13,37 +13,43 @@ export class Guesser extends Component {
             suggestions: ["nothing"],
             letters: []
         }
-        this.sendData = this.sendData.bind(this);
+        this.request = this.request.bind(this);
         this.handleCon = this.handleCon.bind(this);
         this.handleNocon = this.handleNocon.bind(this);
         this.getLetter = this.getLetter.bind(this);
     }
 
-    sendData() {
+    request() {
         let newArr = [];
-        let mask = "";
-        newArr.length = JSON.parse(localStorage.getItem("length")).length;
-        for (let i = 0; i < JSON.parse(localStorage.getItem("length")).length; i++) {
+        let length = JSON.parse(localStorage.getItem("length")).length;
+        newArr.length = length;
+        for (let i = 0; i < length; i++) {
             newArr[i] = this.state.letters[i];
         }
-        this.setState({letters: newArr}, () => {
-            for (let l of this.state.letters) {
-                if (l === "" || l === undefined || l === null) {
-                    mask += ".";
-                } else {
-                    mask += l;
-                }
-            }
-            this.setState({
-                mask: mask
-            }, () => {
-                let inputData = {"mask": this.state.mask, "con": this.state.con, "nocon": this.state.noCon}
-                console.log(inputData);
-                axios.post("http://10.247.13.117:8080/hey", inputData)
-                    .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
-            });
-        });
+        this.setState({letters: newArr}, () => this.createMask()); // вызывается через коллбэк, чтобы функция запустилась точно после setState(), в противном случае сожет быть использовано старое состояние
     }
+
+    createMask () {
+        let mask = "";
+        for (let l of this.state.letters) {
+            if (l === "" || l === undefined || l === null) {
+                mask += ".";
+            } else {
+                mask += l;
+            }
+        }
+
+        this.setState({
+            mask: mask
+        }, () => this.sendData()); // сетаем маску и после этого используем её, т.е. коллбэк запускается только по завершению setState()
+    };
+
+    sendData() {
+        let inputData = {"mask": this.state.mask, "con": this.state.con, "nocon": this.state.noCon}
+        console.log(inputData);
+        axios.post("http://10.247.13.117:8080/hey", inputData)
+            .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
+    };
 
     handleCon(event) {
         this.setState({
@@ -80,7 +86,7 @@ export class Guesser extends Component {
                         <input value={this.state.noCon} onChange={this.handleNocon}/>
                     </div>
                     <div>
-                        <button onClick={this.sendData}>SEND</button>
+                        <button onClick={this.request}>SEND</button>
                     </div>
                 </div>
                 <ul>
