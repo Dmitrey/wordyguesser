@@ -15,7 +15,7 @@ public class Controller {
         this.util = util;
     }
 
-    @PostMapping("/hey")
+    @PostMapping("/find")
     public List<String> find(@RequestBody(required = true) Dto dto) {
         try {
             return util.find(dto.getMask(), dto.getCon(), dto.getNocon());

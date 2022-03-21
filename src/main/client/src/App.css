@@ -37,15 +37,45 @@
   }
 }
 
+body{
+  background-color: black;
+}
+
 div{
-  margin: 1em;
+  margin: 0.3em;
 }
 
 label{
   margin-right: 1em;
 }
 
-.letterInput input{
+.letterInput{
+  margin: 0.5em 0.1em 0.5em 0.1em;
+  padding: 0.1em;
+  width: 0.8em;
+  height: 0.7em;
+  font-size: xx-large;
+}
+
+.wordLength{
+  width: 3em;
+  height: 1.5em;
+}
+
+.main{
+  background-color: orange;
+  position: sticky;
+  top: 0;
+  padding-bottom: 1em;
+  text-align: center;
+  /*margin: auto;*/
+  /*width: 99%;*/
 
 }
+
+li {
+  color: white;
+  list-style-type: none;
+}
+
 

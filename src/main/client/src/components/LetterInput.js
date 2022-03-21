@@ -30,9 +30,8 @@ export class LetterInput extends Component {
         return (
             <div>
                 <label>LENGTH</label>
-                <input value={this.state.length} onChange={this.setLength}/>
+                <input type="number" step="1" className={"wordLength"} min={0} max={100} value={this.state.length} onChange={this.setLength}/>
                 <div>
-                    <label>MASK</label>
                     {this.createLetterInputs()}
                 </div>
             </div>

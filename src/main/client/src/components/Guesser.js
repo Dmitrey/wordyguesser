@@ -47,7 +47,7 @@ export class Guesser extends Component {
     sendData() {
         let inputData = {"mask": this.state.mask, "con": this.state.con, "nocon": this.state.noCon}
         console.log(inputData);
-        axios.post("http://10.247.13.117:8080/hey", inputData)
+        axios.post("http://10.247.13.117:8080/find", inputData)
             .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
     };
 
@@ -75,7 +75,8 @@ export class Guesser extends Component {
     render() {
         return (
             <div>
-                <div>
+                <div className={"main"}>
+                    <br/>
                     <LetterInput callback={this.getLetter}/>
                     <div>
                         <label>WORD CONTAINS</label>
