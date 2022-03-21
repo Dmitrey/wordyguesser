@@ -2,6 +2,7 @@ package com.example.wordlyguesser;
 
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,21 +12,30 @@ import java.util.stream.Collectors;
 
 @Component
 public class Util {
-    String maxWord = "";
+
+    private String[] dictionary;
+
+    @PostConstruct
+    public void loadDictionary() {
+        String file = "src/main/resources/words.txt";
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(file)));
+            dictionary = content.split("\n");
+            if (dictionary.length == 0){
+                throw new RuntimeException("DICTIONARY IS EMPTY");
+            }
+        } catch (IOException | RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
 
     //маску писать через точки: apple - a..l.
     public List<String> find(String mask, String contains, String noContain) throws IOException {
+        if (dictionary == null) {
+            loadDictionary();
+        }
         String m = "^" + mask;
-        String file = "src/main/resources/words.txt";
-        String content = new String(Files.readAllBytes(Paths.get(file)));
-
-//        Arrays.stream(content.split("\n"))
-//                .map(String::toLowerCase)
-//                .map(s-> s.length()>maxWord.length()?maxWord = s:null)
-//                .collect(Collectors.toList());
-//        System.out.println(maxWord);
-
-        return Arrays.stream(content.split("\n"))
+        return Arrays.stream(dictionary)
                 .map(String::toLowerCase)
                 .filter(s -> s.matches(m) && eachContains(contains, s) && containsNo(noContain, s))
                 .collect(Collectors.toList());

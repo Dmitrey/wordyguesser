@@ -7,11 +7,9 @@ export class Guesser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputData: {
-                mask: "",
-                con: "",
-                nocon: ""
-            },
+            mask: "",
+            con: "",
+            noCon: "",
             suggestions: ["nothing"],
             letters: []
         }
@@ -22,74 +20,50 @@ export class Guesser extends Component {
     }
 
     sendData() {
-        this.createMask();
-        console.log(this.state.inputData);
-        axios.post("http://10.247.13.117:8080/hey", this.state.inputData)
-            .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
+        let newArr = [];
+        let mask = "";
+        newArr.length = JSON.parse(localStorage.getItem("length")).length;
+        for (let i = 0; i < JSON.parse(localStorage.getItem("length")).length; i++) {
+            newArr[i] = this.state.letters[i];
+        }
+        this.setState({letters: newArr}, () => {
+            for (let l of this.state.letters) {
+                if (l === "" || l === undefined || l === null) {
+                    mask += ".";
+                } else {
+                    mask += l;
+                }
+            }
+            this.setState({
+                mask: mask
+            }, () => {
+                let inputData = {"mask": this.state.mask, "con": this.state.con, "nocon": this.state.noCon}
+                console.log(inputData);
+                axios.post("http://10.247.13.117:8080/hey", inputData)
+                    .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
+            });
+        });
     }
 
     handleCon(event) {
         this.setState({
-            inputData: {
-                mask: this.state.inputData.mask,
-                con: event.target.value,
-                nocon: this.state.inputData.nocon
-            }
+            con: event.target.value
         });
     }
 
     handleNocon(event) {
         this.setState({
-            inputData: {
-                mask: this.state.inputData.mask,
-                con: this.state.inputData.con,
-                nocon: event.target.value
-            }
+            noCon: event.target.value
         });
     }
 
-    // getLetter(id, value) {
-    //     let newArray = this.state.letters.slice(0, this.state.letters.length);
-    //     newArray[id] = value;
-    //     console.log(newArray);
-    //     this.setState(prevState => ({
-    //         letters: newArray
-    //     })) //todo другие объекты нужно добавлять?
-    // }
-
     getLetter(id, value) {
-        //this.state.letters.length = length;// так работает
         this.setState(update(this.state, {
             letters: {
                 [id]: {$set: value}
             }
         }));
         console.log(this.state.letters);
-    }
-
-    createMask() {
-        let newArr = [];
-        newArr.length = JSON.parse(localStorage.getItem("length")).length;
-        for (let i = 0; i < JSON.parse(localStorage.getItem("length")).length; i++){
-            newArr[i] = this.state.letters[i];
-        }
-        this.setState({letters:newArr});
-
-        let mask = "";
-        for (let l of this.state.letters) {
-            if (l === "" || l === undefined || l === null) {
-                mask += ".";
-            } else {
-                mask += l;
-            }
-        }
-        this.setState({
-            inputData: {
-                mask: mask,
-                con: this.state.inputData.con,
-                nocon: this.state.inputData.nocon
-            }
-        });
     }
 
     render() {
@@ -103,7 +77,7 @@ export class Guesser extends Component {
                     </div>
                     <div>
                         <label>WORD DOESN'T CONTAIN</label>
-                        <input value={this.state.nocon} onChange={this.handleNocon}/>
+                        <input value={this.state.noCon} onChange={this.handleNocon}/>
                     </div>
                     <div>
                         <button onClick={this.sendData}>SEND</button>

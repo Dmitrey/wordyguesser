@@ -17,7 +17,7 @@ export class LetterInput extends Component {
     createLetterInputs() {
         let rows = [];
         for (let i = 0; i < this.state.length; i++) {
-            rows.push(<input key={i} className={"letterInput"}
+            rows.push(<input key={i} className={"letterInput"} maxLength={1}
                              onChange={(event) => {
                                  this.props.callback(i, event.target.value)
                              }}/>); //добавлять буквы в массив
