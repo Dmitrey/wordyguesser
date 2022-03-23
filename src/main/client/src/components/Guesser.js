@@ -10,7 +10,7 @@ export class Guesser extends Component {
             mask: "",
             con: "",
             noCon: "",
-            suggestions: ["nothing"],
+            suggestions: [],
             letters: [],
             loading: false
         }
@@ -20,8 +20,25 @@ export class Guesser extends Component {
         this.getLetter = this.getLetter.bind(this);
     }
 
+    componentDidMount() {
+        const listener = event => {
+            if (event.code === "Enter" || event.code === "NumpadEnter") {
+                console.log("Enter key was pressed. Run your function.");
+                event.preventDefault();
+                this.request();
+            }
+            if (event.code === "KeyUp"){
+
+            }
+        };
+        document.addEventListener("keydown", listener);
+    }
+
     request() {
-        this.setState({loading:true});
+        this.setState({
+            loading: true,
+            suggestions: []
+        });
         let newArr = [];
         let length = JSON.parse(localStorage.getItem("length")).length;
         newArr.length = length;
@@ -52,8 +69,8 @@ export class Guesser extends Component {
 
         axios.post("/find", inputData)
             .then(response => this.setState(response.data.length === 0
-                ? {suggestions: ["nothing found"],loading:false}
-                : {suggestions: response.data,loading:false}))
+                ? {suggestions: ["nothing found"], loading: false}
+                : {suggestions: response.data, loading: false}))
     };
 
     handleCon(event) {
@@ -99,7 +116,6 @@ export class Guesser extends Component {
 
     render() {
         const loadingElement = <li>LOADING</li>;
-        const loadedElement = <li>LOADED</li>;
         return (
             <div>
                 <div className={"main"}>
@@ -118,7 +134,7 @@ export class Guesser extends Component {
                     </div>
                 </div>
                 <ul>
-                    {this.state.loading? loadingElement: loadedElement}
+                    {this.state.loading ? loadingElement : ""}
                     {this.state.suggestions.map(item => {
                         return <li>{item}</li>;
                     })}

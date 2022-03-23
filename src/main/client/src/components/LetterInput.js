@@ -10,6 +10,18 @@ export class LetterInput extends Component {
         this.createLetterInputs = this.createLetterInputs.bind(this);
     }
 
+    componentDidMount() {
+        const listener = event => {
+            if (event.code === "ArrowUp"){
+                this.setState((prevState) => ({length: prevState.length+1}));
+            }
+            if (event.code === "ArrowDown"){
+                this.setState((prevState) => ({length: prevState.length-1}));
+            }
+        };
+        document.addEventListener("keydown", listener);
+    }
+
     setLength(event) {
         this.setState(() => ({length: event.target.value}));
     }
@@ -17,14 +29,23 @@ export class LetterInput extends Component {
     createLetterInputs() {
         let rows = [];
         for (let i = 0; i < this.state.length; i++) {
+
             let onChange = (event) => { //как смириться что это функция?
                 if (this.checkEnglish(event)) {
-                    this.props.callback(i, event.target.value)
+                    this.props.callback(i, event.target.value);
+                    handleFocus(event);
                 } else {
                     event.target.value="";
                     alert("use english characters only")
                 }
             };
+
+            const handleFocus = (e) => {
+                if(e.target.nextSibling)
+                    e.target.nextSibling.focus();
+
+            }
+
             rows.push(<input key={i} className={"letterInput"} maxLength={1}
                              onChange={onChange}/>); //добавлять буквы в массив
         }
@@ -36,6 +57,11 @@ export class LetterInput extends Component {
         let str = event.target.value;
         let letter = str.charAt(str.length - 1);
         return (letter >= 'a' && letter <= 'z') || (letter >= 'A' && letter <= 'Z') || letter === '';
+    }
+
+    handleFocus(e) {
+        if (e.target.nextSibling)
+            e.target.nextSibling.focus();
     }
 
     render() {

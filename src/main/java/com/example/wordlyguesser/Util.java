@@ -17,7 +17,7 @@ public class Util {
 
     @PostConstruct
     public void loadDictionary() {
-        String file = "src/main/resources/words.txt";
+        String file = "src/main/resources/engmix.txt";
         try {
             String content = new String(Files.readAllBytes(Paths.get(file)));
             dictionary = content.split("\n");
