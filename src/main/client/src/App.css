@@ -55,26 +55,39 @@ label{
   width: 0.8em;
   height: 0.7em;
   font-size: xx-large;
+  text-align: center;
+  background-color: burlywood;
+  border-radius: 5px;
 }
 
 .wordLength{
   width: 3em;
   height: 1.5em;
+  background-color: burlywood;
+  border-radius: 5px;
 }
 
 .main{
-  background-color: orange;
+  background-image: url("black-1072366.jpg");
+  background-size: cover;
   position: sticky;
   top: 0;
   padding-bottom: 1em;
   text-align: center;
-  /*margin: auto;*/
-  /*width: 99%;*/
+  color: white;
+}
+
+.main input{
+  border-radius: 5px;
+}
+
+.main button{
+  padding: 0.1em 1em;
+  background-color: burlywood;
+  border-radius: 5px;
 }
 
 li {
   color: white;
   list-style-type: none;
 }
-
-

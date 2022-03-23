@@ -12,11 +12,11 @@ export class LetterInput extends Component {
 
     componentDidMount() {
         const listener = event => {
-            if (event.code === "ArrowUp"){
-                this.setState((prevState) => ({length: prevState.length+1}));
+            if (event.code === "ArrowUp" && this.state.length <= 99) {
+                this.setState((prevState) => ({length: prevState.length - 0 + 1}));
             }
-            if (event.code === "ArrowDown"){
-                this.setState((prevState) => ({length: prevState.length-1}));
+            if (event.code === "ArrowDown" && this.state.length > 1) {
+                this.setState((prevState) => ({length: prevState.length - 0 - 1}));
             }
         };
         document.addEventListener("keydown", listener);
@@ -35,13 +35,13 @@ export class LetterInput extends Component {
                     this.props.callback(i, event.target.value);
                     handleFocus(event);
                 } else {
-                    event.target.value="";
+                    event.target.value = "";
                     alert("use english characters only")
                 }
             };
 
             const handleFocus = (e) => {
-                if(e.target.nextSibling)
+                if (e.target.nextSibling)
                     e.target.nextSibling.focus();
 
             }
@@ -68,7 +68,7 @@ export class LetterInput extends Component {
         return (
             <div>
                 <label>LENGTH</label>
-                <input type="number" step="1" className={"wordLength"} min={0} max={100} value={this.state.length}
+                <input type="number" step="1" className={"wordLength"} min={1} max={100} value={this.state.length}
                        onChange={this.setLength}/>
                 <div>
                     {this.createLetterInputs()}

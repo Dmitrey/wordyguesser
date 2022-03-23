@@ -27,7 +27,7 @@ export class Guesser extends Component {
                 event.preventDefault();
                 this.request();
             }
-            if (event.code === "KeyUp"){
+            if (event.code === "KeyUp") {
 
             }
         };
@@ -130,7 +130,7 @@ export class Guesser extends Component {
                         <input value={this.state.noCon} onChange={this.handleNocon}/>
                     </div>
                     <div>
-                        <button onClick={this.request}>SEND</button>
+                        <button onClick={this.request}>FIND</button>
                     </div>
                 </div>
                 <ul>
