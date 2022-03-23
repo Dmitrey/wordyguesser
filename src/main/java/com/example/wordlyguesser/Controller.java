@@ -18,7 +18,7 @@ public class Controller {
     @PostMapping("/find")
     public List<String> find(@RequestBody(required = true) Dto dto) {
         try {
-            return util.find(dto.getMask(), dto.getCon().toLowerCase(), dto.getNocon().toLowerCase());
+            return util.find(dto.getMask().toLowerCase(), dto.getCon().toLowerCase(), dto.getNocon().toLowerCase());
         }catch (IOException e){
             System.err.println("ошибочка...");
             e.printStackTrace();

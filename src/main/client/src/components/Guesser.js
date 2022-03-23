@@ -29,7 +29,7 @@ export class Guesser extends Component {
         this.setState({letters: newArr}, () => this.createMask()); // вызывается через коллбэк, чтобы функция запустилась точно после setState(), в противном случае сожет быть использовано старое состояние
     }
 
-    createMask () {
+    createMask() {
         let mask = "";
         for (let l of this.state.letters) {
             if (l === "" || l === undefined || l === null) {
@@ -52,15 +52,29 @@ export class Guesser extends Component {
     };
 
     handleCon(event) {
-        this.setState({
-            con: event.target.value
-        });
+        if (this.checkEnglish(event)) {
+            this.setState({
+                con: event.target.value
+            });
+        }else {
+            this.setState(prevState => ({
+                con: prevState.con
+            }));
+            alert("use english characters only");
+        }
     }
 
     handleNocon(event) {
-        this.setState({
-            noCon: event.target.value
-        });
+        if (this.checkEnglish(event)) {
+            this.setState({
+                noCon: event.target.value
+            });
+        }else {
+            this.setState(prevState => ({
+                noCon: prevState.noCon
+            }));
+            alert("use english characters only");
+        }
     }
 
     getLetter(id, value) {
@@ -70,6 +84,12 @@ export class Guesser extends Component {
             }
         }));
         console.log(this.state.letters);
+    }
+
+    checkEnglish(event) {
+        let str = event.target.value;
+        let letter = str.charAt(str.length - 1);
+        return (letter >= 'a' && letter <= 'z') || (letter >= 'A' && letter <= 'Z') || letter === '';
     }
 
     render() {
@@ -84,7 +104,7 @@ export class Guesser extends Component {
                     </div>
                     <div>
                         <label>WORD DOESN'T CONTAIN</label>
-                        <input value={this.state.noCon} onChange={this.handleNocon}/>
+                        <input value={this.state.noCon} onChange={this.handleNocon} />
                     </div>
                     <div>
                         <button onClick={this.request}>SEND</button>

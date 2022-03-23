@@ -27,3 +27,5 @@
 
 Heroku не принял такой вариант и пришлось руками всё копировать, естественно 
 это нужно закомитить.
+
+Дальше по тексту: https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku
