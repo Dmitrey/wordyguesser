@@ -11,7 +11,8 @@ export class Guesser extends Component {
             con: "",
             noCon: "",
             suggestions: ["nothing"],
-            letters: []
+            letters: [],
+            loading: false
         }
         this.request = this.request.bind(this);
         this.handleCon = this.handleCon.bind(this);
@@ -20,6 +21,7 @@ export class Guesser extends Component {
     }
 
     request() {
+        this.setState({loading:true});
         let newArr = [];
         let length = JSON.parse(localStorage.getItem("length")).length;
         newArr.length = length;
@@ -47,8 +49,11 @@ export class Guesser extends Component {
     sendData() {
         let inputData = {"mask": this.state.mask, "con": this.state.con, "nocon": this.state.noCon}
         console.log(inputData);
+
         axios.post("/find", inputData)
-            .then(response => this.setState(response.data.length === 0 ? {suggestions: ["nothing found"]} : {suggestions: response.data}))
+            .then(response => this.setState(response.data.length === 0
+                ? {suggestions: ["nothing found"],loading:false}
+                : {suggestions: response.data,loading:false}))
     };
 
     handleCon(event) {
@@ -56,7 +61,7 @@ export class Guesser extends Component {
             this.setState({
                 con: event.target.value
             });
-        }else {
+        } else {
             this.setState(prevState => ({
                 con: prevState.con
             }));
@@ -69,7 +74,7 @@ export class Guesser extends Component {
             this.setState({
                 noCon: event.target.value
             });
-        }else {
+        } else {
             this.setState(prevState => ({
                 noCon: prevState.noCon
             }));
@@ -93,6 +98,8 @@ export class Guesser extends Component {
     }
 
     render() {
+        const loadingElement = <li>LOADING</li>;
+        const loadedElement = <li>LOADED</li>;
         return (
             <div>
                 <div className={"main"}>
@@ -104,13 +111,14 @@ export class Guesser extends Component {
                     </div>
                     <div>
                         <label>WORD DOESN'T CONTAIN</label>
-                        <input value={this.state.noCon} onChange={this.handleNocon} />
+                        <input value={this.state.noCon} onChange={this.handleNocon}/>
                     </div>
                     <div>
                         <button onClick={this.request}>SEND</button>
                     </div>
                 </div>
                 <ul>
+                    {this.state.loading? loadingElement: loadedElement}
                     {this.state.suggestions.map(item => {
                         return <li>{item}</li>;
                     })}
